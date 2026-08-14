@@ -1,0 +1,47 @@
+# =========================
+# 1. ORTAK DOSYALAR & İŞLETİM SİSTEMİ
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.log
+
+# =========================
+# 2. GİZLİ DEĞİŞKENLER (ÇOK ÖNEMLİ)
+# =========================
+# API Key'lerin ve şifrelerin Github'a sızmaması için
+.env
+.env.local
+.env.*.local
+*.env
+
+# =========================
+# 3. PYTHON & FASTAPI (BACKEND)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+.pytest_cache/
+alembic.ini
+
+# =========================
+# 4. NODE.JS & REACT & STRAPI (FRONTEND & CMS)
+# =========================
+node_modules/
+dist/
+build/
+.npm/
+.yarn/
+out/
+.next/
+
+# Strapi spesifik ignore
+cms/.tmp/
+cms/public/uploads/
+cms/build/
