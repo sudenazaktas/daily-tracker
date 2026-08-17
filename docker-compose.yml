@@ -23,5 +23,23 @@ services:
     env_file:
       - ./backend/.env
 
+  strapi:
+      build: ./cms
+      container_name: daily_tracker_strapi
+      environment:
+        DATABASE_CLIENT: postgres
+        DATABASE_HOST: postgres
+        DATABASE_PORT: 5432
+        DATABASE_NAME: daily_tracker_db
+        DATABASE_USERNAME: postgres
+        DATABASE_PASSWORD: postgres
+      ports:
+        - "1337:1337"
+      volumes:
+        - ./cms:/opt/app
+        - /opt/app/node_modules
+      depends_on:
+        - postgres
+
 volumes:
   postgres_data:
