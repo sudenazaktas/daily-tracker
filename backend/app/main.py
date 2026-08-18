@@ -3,6 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.database import engine
 from sqlalchemy import text
+from app.models.subscription import Subscription
+from app.database import Base
+from app.api.subscriptions import router as subscriptions_router
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Daily Tracker API")
 
@@ -16,6 +21,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(subscriptions_router)
 
 @app.get("/health")
 def health_check():
