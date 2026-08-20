@@ -7,3 +7,4 @@ pydantic[email]
 httpx
 PyJWT
 tavily-python
+google-genai
