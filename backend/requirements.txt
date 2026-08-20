@@ -6,3 +6,4 @@ python-dotenv
 pydantic[email]
 httpx
 PyJWT
+tavily-python

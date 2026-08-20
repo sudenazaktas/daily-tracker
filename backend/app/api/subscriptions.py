@@ -15,7 +15,7 @@ def create_subscription(
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user_id),
 ):
-    new_sub = Subscription(user_id=user_id, topic=payload.topic)
+    new_sub = Subscription(user_id=user_id, topic=payload.topic, category=payload.category)
     db.add(new_sub)
     db.commit()
     db.refresh(new_sub)
