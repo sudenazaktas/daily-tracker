@@ -8,3 +8,4 @@ httpx
 PyJWT
 tavily-python
 google-genai
+resend
