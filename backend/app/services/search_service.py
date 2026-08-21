@@ -14,7 +14,7 @@ def search_topic(topic: str, category: str = "General") -> list[dict]:
         query=query,
         topic="news",
         days=1,
-        max_results=20,
+        max_results=25,
     )
 
     return response.get("results", [])
