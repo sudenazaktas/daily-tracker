@@ -136,20 +136,20 @@ DELETE /subscriptions/{id}
 
 ## 7. Şu Ana Kadar Yapılanlar
 
-- [ ] Repo oluşturuldu
-- [ ] Klasör yapısı kuruldu
-- [ ] Docker Compose ile PostgreSQL + backend ayağa kaldırıldı
-- [ ] FastAPI temel iskelet çalışıyor
-- [ ] Veritabanı bağlantısı (SQLAlchemy)
-- [ ] Strapi kurulumu
-- [ ] Auth (register/login) entegrasyonu
-- [ ] Subscribe/Unsubscribe endpoint'leri
-- [ ] Tavily entegrasyonu
-- [ ] Sıralama algoritması
-- [ ] E-posta gönderimi
-- [ ] Scheduler entegrasyonu
+- [x] Repo oluşturuldu
+- [x] Klasör yapısı kuruldu
+- [x] Docker Compose ile PostgreSQL + backend ayağa kaldırıldı
+- [x] FastAPI temel iskelet çalışıyor
+- [x] Veritabanı bağlantısı (SQLAlchemy)
+- [x] Strapi kurulumu
+- [x] Auth (register/login) entegrasyonu
+- [x] Subscribe/Unsubscribe endpoint'leri
+- [x] Tavily entegrasyonu
+- [x] Sıralama algoritması (Gemini AI)
+- [x] E-posta gönderimi (Resend)
+- [x] Scheduler entegrasyonu (APScheduler + /jobs endpoints)
 - [ ] Frontend
 
 ---
 
-*Son güncelleme: bu dosyayı güncel tutmak için her önemli karar sonrası düzenleyin.*
+*Son güncelleme: 21 Ağustos 2026*

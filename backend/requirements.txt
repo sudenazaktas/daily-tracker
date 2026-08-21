@@ -9,3 +9,4 @@ PyJWT
 tavily-python
 google-genai
 resend
+apscheduler

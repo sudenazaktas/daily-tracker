@@ -10,36 +10,46 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d daily_tracker_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   backend:
     build: ./backend
     container_name: daily_tracker_backend
+    restart: unless-stopped
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file:
       - ./backend/.env
 
   strapi:
-      build: ./cms
-      container_name: daily_tracker_strapi
-      environment:
-        DATABASE_CLIENT: postgres
-        DATABASE_HOST: postgres
-        DATABASE_PORT: 5432
-        DATABASE_NAME: daily_tracker_db
-        DATABASE_USERNAME: postgres
-        DATABASE_PASSWORD: postgres
-      ports:
-        - "1337:1337"
-      volumes:
-        - ./cms:/opt/app
-        - /opt/app/node_modules
-      depends_on:
-        - postgres
+    build: ./cms
+    container_name: daily_tracker_strapi
+    restart: unless-stopped
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: daily_tracker_db
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    ports:
+      - "1337:1337"
+    volumes:
+      - ./cms:/opt/app
+      - /opt/app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 
 volumes:
   postgres_data:
