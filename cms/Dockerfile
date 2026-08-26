@@ -7,6 +7,10 @@ RUN npm install
 
 COPY . .
 
+# Strapi local upload sağlayıcısı bu klasörün var olmasını bekler.
+# public/uploads gitignore'da olduğu için image'a girmez; burada oluşturuyoruz.
+RUN mkdir -p public/uploads
+
 RUN npm run build
 
 EXPOSE 1337
