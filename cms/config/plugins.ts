@@ -23,13 +23,11 @@ const deniedExecutableTypes = [
 ];
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+  // NOT: jwtManagement:'refresh' + sessions modu üretimde login endpoint'inde
+  // 500 hatasına yol açtığı (ve kısa ömürlü token'la 10 dk'da oturum düşürdüğü)
+  // için kaldırıldı. Standart uzun ömürlü JWT modu kullanılıyor.
   'users-permissions': {
-    config: {
-      jwtManagement: 'refresh',
-      sessions: {
-        httpOnly: true,
-      },
-    },
+    config: {},
   },
   upload: {
     config: {
