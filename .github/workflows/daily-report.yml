@@ -1,0 +1,22 @@
+name: Günlük Rapor Tetikleyici
+
+# Ücretsiz sunucu (Render) uyuduğu için in-process zamanlayıcı yerine dış cron kullanılır.
+on:
+  schedule:
+    - cron: "0 9 * * *" # her gün 09:00 UTC (Türkiye ~12:00)
+  workflow_dispatch: {} # Actions sekmesinden elle de çalıştırılabilir
+
+jobs:
+  trigger-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Backend'i uyandır ve günlük görevi tetikle
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          JOB_SECRET: ${{ secrets.JOB_SECRET }}
+        run: |
+          # Render free servisi uykudan uyanırken gecikebilir; cömert timeout + retry.
+          curl -sS -m 180 --retry 4 --retry-delay 30 --retry-all-errors \
+            -X POST "$BACKEND_URL/jobs/run-daily" \
+            -H "X-Job-Secret: $JOB_SECRET" \
+            -w "\nHTTP durumu: %{http_code}\n"

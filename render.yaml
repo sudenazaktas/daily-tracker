@@ -1,0 +1,72 @@
+# Render Blueprint — FastAPI backend + Strapi CMS
+# Frontend Vercel'de, veritabanı Neon'da barınır (aşağıdaki DATABASE_URL onlara işaret eder).
+#
+# ÖNEMLİ:
+#   • İki servisteki JWT_SECRET ve DATABASE_URL AYNI değer olmalı
+#     (backend, Strapi'nin ürettiği token'ı doğrular; ikisi aynı Neon DB'sini paylaşır).
+#   • sync:false olan değişkenler Render panelinden elle girilir (gizli).
+#   • generateValue:true olanları Render otomatik güvenli üretir.
+
+services:
+  # ---------- Backend (FastAPI) ----------
+  - type: web
+    name: daily-tracker-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL          # Neon connection string (?sslmode=require ile). Strapi ile AYNI.
+        sync: false
+      - key: STRAPI_URL            # Strapi servisinin public URL'i (ilk deploy sonrası girilir)
+        sync: false
+      - key: JWT_SECRET            # Strapi JWT_SECRET ile AYNI olmalı
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: RESEND_API_KEY
+        sync: false
+      - key: ALLOWED_ORIGINS       # Vercel frontend adresi, örn. https://daily-tracker.vercel.app
+        sync: false
+      - key: ENABLE_SCHEDULER      # Ücretsiz sunucu uyuduğu için kapalı; dış cron kullanılır
+        value: "false"
+      - key: JOB_SECRET            # /jobs/run-daily'yi koruyan gizli anahtar (GitHub Actions ile paylaşılır)
+        generateValue: true
+
+  # ---------- Strapi (CMS / kullanıcı yönetimi) ----------
+  - type: web
+    name: daily-tracker-strapi
+    runtime: docker
+    dockerfilePath: ./cms/Dockerfile
+    dockerContext: ./cms
+    dockerCommand: npm run start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_CLIENT
+        value: postgres
+      - key: DATABASE_URL          # Backend ile AYNI Neon connection string
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      - key: DATABASE_SSL_REJECT_UNAUTHORIZED
+        value: "false"
+      - key: JWT_SECRET            # Backend JWT_SECRET ile AYNI olmalı
+        sync: false
+      - key: APP_KEYS
+        generateValue: true
+      - key: API_TOKEN_SALT
+        generateValue: true
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+      - key: TRANSFER_TOKEN_SALT
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true

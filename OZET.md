@@ -127,10 +127,22 @@ daily_tracker/
 ```
 POST   /auth/register
 POST   /auth/login
+GET    /auth/me                 # Strapi'den kullanıcı bilgisi (JWT ile)
 GET    /subscriptions
-POST   /subscriptions
+POST   /subscriptions           # topic + category + frequency
+PATCH  /subscriptions/{id}      # topic/category/frequency güncelle
 DELETE /subscriptions/{id}
+GET    /reports                 # kullanıcının geçmiş raporları
+POST   /reports/preview         # "Şimdi Getir" — anlık önizleme (kayıt/mail yok)
+POST   /jobs/run-daily          # günlük görevi manuel tetikle (arka plan)
+POST   /jobs/run-daily-sync     # senkron tetikle + sonuç döndür
 ```
+
+**Yeni alanlar (subscriptions):**
+- `frequency`: `daily` (24 saatte bir) | `every_3_days` | `weekly` — kullanıcı seçer, `daily_job` bu aralığa göre gönderir
+- `last_sent_at`: son gönderim zamanı (sıklık kontrolü için)
+
+**Yeni tablo:** `reports` — gönderilen her rapor (topic, category, results JSON) geçmiş için saklanır.
 
 ---
 
@@ -148,8 +160,12 @@ DELETE /subscriptions/{id}
 - [x] Sıralama algoritması (Gemini AI)
 - [x] E-posta gönderimi (Resend)
 - [x] Scheduler entegrasyonu (APScheduler + /jobs endpoints)
-- [ ] Frontend
+- [x] Gönderim sıklığı özelleştirme (günlük / 3 günde bir / haftalık)
+- [x] Rapor geçmişi (reports tablosu + GET /reports)
+- [x] Anlık önizleme (POST /reports/preview — "Şimdi Getir")
+- [x] Frontend (React + Tailwind v4, GrowthTracker tasarımı, Türkçe)
+  - Sayfalar: Landing, Auth (giriş/kayıt), Panel, Geçmiş, İçgörüler, Profil/Ayarlar
 
 ---
 
-*Son güncelleme: 21 Ağustos 2026*
+*Son güncelleme: 24 Ağustos 2026*

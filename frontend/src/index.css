@@ -1,0 +1,266 @@
+@import "tailwindcss";
+
+/*
+  GrowthTracker tasarım sistemi — "Organic Precision"
+  Stitch DESIGN.md tokenlarının Tailwind v4 @theme karşılığı.
+*/
+@theme {
+  /* Font ailesi — her yerde Inter */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Renkler */
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #d9dadb;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container: #edeeef;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+  --color-surface-variant: #e1e3e4;
+  --color-surface-tint: #006d32;
+
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #3e4a3e;
+  --color-inverse-surface: #2e3132;
+  --color-inverse-on-surface: #f0f1f2;
+
+  --color-outline: #6e7a6d;
+  --color-outline-variant: #bdcabb;
+
+  --color-primary: #006b31;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #008740;
+  --color-on-primary-container: #f7fff3;
+  --color-inverse-primary: #6cdd89;
+  --color-primary-fixed: #88faa2;
+  --color-primary-fixed-dim: #6cdd89;
+  --color-on-primary-fixed: #00210b;
+  --color-on-primary-fixed-variant: #005224;
+
+  --color-secondary: #2b6954;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #adedd3;
+  --color-on-secondary-container: #306d58;
+  --color-secondary-fixed: #b0f0d6;
+  --color-secondary-fixed-dim: #95d3ba;
+  --color-on-secondary-fixed: #002117;
+  --color-on-secondary-fixed-variant: #0b513d;
+
+  --color-tertiary: #466252;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #5e7b6a;
+  --color-on-tertiary-container: #f6fff6;
+  --color-tertiary-fixed: #caead6;
+  --color-tertiary-fixed-dim: #afceba;
+  --color-on-tertiary-fixed: #042014;
+  --color-on-tertiary-fixed-variant: #314d3e;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+
+  /*
+    Aralık ölçeği (8px tabanlı ritim).
+    NOT: sm/md/lg/xl anahtarları Tailwind'in container ölçeğiyle (max-w-md gibi)
+    çakışır ve onları ezer. Bu yüzden genişlik için max-w-md yerine
+    max-w-[28rem] gibi doğrudan değerler kullanın. p-md, gap-sm vb. sorunsuz.
+  */
+  --spacing-base: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 16px;
+  --spacing-md: 24px;
+  --spacing-lg: 32px;
+  --spacing-xl: 48px;
+  --spacing-gutter: 16px;
+  --spacing-safe-margin: 20px;
+
+  /* Tipografi ölçeği */
+  --text-headline-xl: 40px;
+  --text-headline-xl--line-height: 48px;
+  --text-headline-xl--letter-spacing: -0.02em;
+  --text-headline-xl--font-weight: 700;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-lg-mobile: 28px;
+  --text-headline-lg-mobile--line-height: 34px;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 600;
+
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--font-weight: 500;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-sans);
+}
+
+/*
+  Dark mode — <html class="dark"> eklendiğinde renk değişkenleri ezilir.
+  @theme utility'leri var(--color-*) referans verdiği için tüm bileşenler
+  otomatik olarak koyu temaya uyum sağlar (ekstra dark: sınıfına gerek yok).
+  M3 tarzı koyu yeşil şema.
+*/
+html.dark {
+  color-scheme: dark;
+
+  --color-primary: #6cdd89;
+  --color-on-primary: #00391a;
+  --color-primary-container: #008740;
+  --color-on-primary-container: #f7fff3;
+  --color-inverse-primary: #006b31;
+  --color-primary-fixed: #88faa2;
+  --color-primary-fixed-dim: #6cdd89;
+  --color-on-primary-fixed: #00210b;
+  --color-on-primary-fixed-variant: #005224;
+
+  --color-secondary: #95d3ba;
+  --color-on-secondary: #00382a;
+  --color-secondary-container: #0b513d;
+  --color-on-secondary-container: #b0f0d6;
+  --color-secondary-fixed: #b0f0d6;
+  --color-secondary-fixed-dim: #95d3ba;
+
+  --color-tertiary: #afceba;
+  --color-on-tertiary: #1b3428;
+  --color-tertiary-container: #314d3e;
+  --color-on-tertiary-container: #caead6;
+  --color-tertiary-fixed: #314d3e;
+  --color-tertiary-fixed-dim: #afceba;
+  --color-on-tertiary-fixed: #caead6;
+
+  --color-error: #ffb4ab;
+  --color-on-error: #690005;
+  --color-error-container: #93000a;
+  --color-on-error-container: #ffdad6;
+
+  --color-background: #0f1411;
+  --color-on-background: #e1e3df;
+  --color-surface: #0f1411;
+  --color-surface-dim: #0f1411;
+  --color-surface-bright: #353a36;
+  --color-surface-container-lowest: #0a0f0c;
+  --color-surface-container-low: #171d19;
+  --color-surface-container: #1b211d;
+  --color-surface-container-high: #262b27;
+  --color-surface-container-highest: #303632;
+  --color-surface-variant: #414942;
+
+  --color-on-surface: #e1e3df;
+  --color-on-surface-variant: #c0c9be;
+  --color-outline: #8a938b;
+  --color-outline-variant: #414942;
+  --color-inverse-surface: #e1e3df;
+  --color-inverse-on-surface: #2e3132;
+}
+
+/* Material Symbols ikon yardımcı sınıfı */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* Glassmorphism yüzeyler */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Cam yüzeyler koyu temada */
+html.dark .glass-panel {
+  background: rgba(27, 33, 29, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+html.dark .glass-card {
+  background: rgba(23, 29, 25, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Auth ekranı sol panel arka planı */
+.left-panel-bg {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e1e3e4 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+html.dark .left-panel-bg {
+  background: linear-gradient(135deg, #0f1411 0%, #1b211d 100%);
+}
+
+.flowing-lines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image:
+    radial-gradient(circle at 20% 30%, #006b31 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, #6cdd89 0%, transparent 40%);
+  filter: blur(40px);
+}
+
+/* Hero arka plan çizgi animasyonu */
+.animated-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dash 5s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

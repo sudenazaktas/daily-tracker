@@ -3,7 +3,11 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.core.security import get_current_user_id
 from app.models.subscription import Subscription
-from app.schemas.subscription import SubscriptionCreate, SubscriptionResponse
+from app.schemas.subscription import (
+    SubscriptionCreate,
+    SubscriptionUpdate,
+    SubscriptionResponse,
+)
 from typing import List
 
 router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
@@ -15,11 +19,43 @@ def create_subscription(
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user_id),
 ):
-    new_sub = Subscription(user_id=user_id, topic=payload.topic, category=payload.category)
+    new_sub = Subscription(
+        user_id=user_id,
+        topic=payload.topic,
+        category=payload.category,
+        frequency=payload.frequency.value,
+    )
     db.add(new_sub)
     db.commit()
     db.refresh(new_sub)
     return new_sub
+
+
+@router.patch("/{subscription_id}", response_model=SubscriptionResponse)
+def update_subscription(
+    subscription_id: int,
+    payload: SubscriptionUpdate,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user_id),
+):
+    sub = db.query(Subscription).filter(
+        Subscription.id == subscription_id,
+        Subscription.user_id == user_id,
+    ).first()
+
+    if not sub:
+        raise HTTPException(status_code=404, detail="Subscription not found")
+
+    if payload.topic is not None:
+        sub.topic = payload.topic
+    if payload.category is not None:
+        sub.category = payload.category
+    if payload.frequency is not None:
+        sub.frequency = payload.frequency.value
+
+    db.commit()
+    db.refresh(sub)
+    return sub
 
 
 @router.get("", response_model=List[SubscriptionResponse])

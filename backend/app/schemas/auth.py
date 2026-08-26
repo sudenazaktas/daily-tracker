@@ -13,6 +13,10 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class RefreshRequest(BaseModel):
+    refreshToken: str
+
+
 class AuthResponse(BaseModel):
     jwt: str
     refreshToken: Optional[str] = None
