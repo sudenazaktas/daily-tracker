@@ -21,7 +21,8 @@ def get_current_user_id(credentials: HTTPAuthorizationCredentials = Depends(secu
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    user_id = payload.get("userId")
+    # Standart Strapi JWT'si "id", refresh modu ise "userId" kullanır — ikisini de destekle.
+    user_id = payload.get("id") or payload.get("userId")
     if user_id is None:
         raise HTTPException(status_code=401, detail="Token missing user id")
 
