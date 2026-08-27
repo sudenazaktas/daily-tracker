@@ -30,10 +30,12 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.5-flash-lite
-      - key: GMAIL_USER          # kendi Gmail adresin (gönderen)
+      - key: BREVO_API_KEY       # Brevo HTTP API anahtarı (SMTP değil — Render SMTP'yi engeller)
         sync: false
-      - key: GMAIL_APP_PASSWORD  # Google Uygulama Şifresi (16 hane)
+      - key: SENDER_EMAIL        # Brevo'da doğrulanmış gönderen e-posta
         sync: false
+      - key: SENDER_NAME
+        value: Daily Tracker
       - key: ALLOWED_ORIGINS       # Vercel frontend adresi, örn. https://daily-tracker.vercel.app
         sync: false
       - key: ENABLE_SCHEDULER      # Ücretsiz sunucu uyuduğu için kapalı; dış cron kullanılır

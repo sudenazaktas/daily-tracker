@@ -1,8 +1,5 @@
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.utils import formataddr
+import httpx
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from app.services.search_service import search_topic
@@ -10,9 +7,11 @@ from app.services.ranking import rank_results
 
 load_dotenv()
 
-# Gmail SMTP ile gönderim: kendi Gmail'inden herkese mail atabilirsin (domain gerekmez).
-GMAIL_USER = os.getenv("GMAIL_USER")
-GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")  # Google "Uygulama Şifresi" (16 hane)
+# Brevo (HTTP API) ile gönderim — Render giden SMTP'yi engellediği için SMTP kullanılamıyor.
+# Tek bir gönderen e-postası Brevo'da doğrulanır; sonra herkese gönderilebilir (domain gerekmez).
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "snazaktas@gmail.com")  # Brevo'da doğrulanmış gönderen
+SENDER_NAME = os.getenv("SENDER_NAME", "Daily Tracker")
 
 
 def _source_from_url(url: str) -> str:
@@ -76,28 +75,33 @@ def build_email_html(topic: str, results: list[dict]) -> str:
 
 
 def send_report_email(to_email: str, topic: str, results: list[dict]):
-    """Verilen (normalize edilmiş) sonuçlarla rapor e-postasını Gmail SMTP ile gönderir."""
+    """Verilen (normalize edilmiş) sonuçlarla rapor e-postasını Brevo HTTP API ile gönderir."""
     if not results:
         print(f"'{topic}' için gönderilecek sonuç bulunamadı.")
         return None
 
-    if not GMAIL_USER or not GMAIL_APP_PASSWORD:
-        raise RuntimeError("GMAIL_USER / GMAIL_APP_PASSWORD tanımlı değil. E-posta gönderilemiyor.")
+    if not BREVO_API_KEY:
+        raise RuntimeError("BREVO_API_KEY tanımlı değil. E-posta gönderilemiyor.")
 
     html = build_email_html(topic, results)
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"Günlük Raporunuz - {topic}"
-    msg["From"] = formataddr(("Daily Tracker", GMAIL_USER))
-    msg["To"] = to_email
-    msg.attach(MIMEText(html, "html", "utf-8"))
-
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
-        server.starttls()
-        server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
-        server.sendmail(GMAIL_USER, [to_email], msg.as_string())
-
-    return {"status": "sent", "to": to_email}
+    response = httpx.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={
+            "api-key": BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        json={
+            "sender": {"name": SENDER_NAME, "email": SENDER_EMAIL},
+            "to": [{"email": to_email}],
+            "subject": f"Günlük Raporunuz - {topic}",
+            "htmlContent": html,
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    return response.json()
 
 
 def send_daily_report(to_email: str, topic: str, category: str = "General"):
