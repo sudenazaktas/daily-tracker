@@ -7,7 +7,7 @@ import ThemeToggle from './ThemeToggle'
 const NAV_LINKS = [
   { label: 'Panel', to: '/dashboard', icon: 'dashboard' },
   { label: 'Geçmiş', to: '/history', icon: 'history' },
-  { label: 'İçgörüler', to: '/insights', icon: 'insights' },
+  { label: 'İstatistikler', to: '/insights', icon: 'insights' },
 ]
 
 export default function Navbar() {

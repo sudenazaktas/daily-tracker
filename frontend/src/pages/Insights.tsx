@@ -23,7 +23,7 @@ export default function Insights() {
       try {
         setReports(await listReports(200))
       } catch {
-        setError('İçgörüler yüklenemedi. Backend çalışıyor mu?')
+        setError('İstatistikler yüklenemedi. Backend çalışıyor mu?')
       } finally {
         setLoading(false)
       }
@@ -95,7 +95,7 @@ export default function Insights() {
             <span className="text-label-sm">Özet İstatistikler</span>
           </div>
           <h1 className="text-headline-lg text-on-surface tracking-tight">
-            <span className="text-primary">İçgörüler</span>
+            <span className="text-primary">İstatistikler</span>
           </h1>
           <p className="text-body-md text-on-surface-variant max-w-2xl">
             Gönderilen raporlarınızdan türetilen genel görünüm. Veriler biriktikçe bu
