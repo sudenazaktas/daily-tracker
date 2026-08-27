@@ -51,8 +51,9 @@ app.include_router(jobs_router)
 app.include_router(reports_router)
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health_check():
+    # HEAD de kabul edilir (UptimeRobot varsayılan olarak HEAD ile pingler)
     return {"status": "ok"}
 
 
