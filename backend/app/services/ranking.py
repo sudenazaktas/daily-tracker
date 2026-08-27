@@ -50,7 +50,20 @@ SADECE asagidaki JSON formatinda cevap ver, baska hicbir aciklama ekleme:
 
         parsed = json.loads(raw_text)
         selected_indices = parsed["selected_indices"]
-        return [pre_filtered[i] for i in selected_indices if i < len(pre_filtered)]
+        selected = [pre_filtered[i] for i in selected_indices if i < len(pre_filtered)]
+
+        # Gemini 10'dan az seçtiyse, kalan en yüksek skorlu sonuçlarla 10'a tamamla
+        # (tekrarları URL'e göre ele). Böylece önizleme ve mail tutarlı şekilde ~10 gösterir.
+        if len(selected) < 10:
+            seen_urls = {r.get("url") for r in selected}
+            for r in pre_filtered:
+                if len(selected) >= 10:
+                    break
+                if r.get("url") not in seen_urls:
+                    selected.append(r)
+                    seen_urls.add(r.get("url"))
+
+        return selected
 
     except (json.JSONDecodeError, KeyError, IndexError) as e:
         print(f"Gemini yaniti parse edilemedi, fallback kullaniliyor: {e}")
