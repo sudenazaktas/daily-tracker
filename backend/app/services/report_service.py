@@ -1,13 +1,18 @@
 import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.utils import formataddr
 from urllib.parse import urlparse
-import resend
 from dotenv import load_dotenv
 from app.services.search_service import search_topic
 from app.services.ranking import rank_results
 
 load_dotenv()
 
-resend.api_key = os.getenv("RESEND_API_KEY")
+# Gmail SMTP ile gönderim: kendi Gmail'inden herkese mail atabilirsin (domain gerekmez).
+GMAIL_USER = os.getenv("GMAIL_USER")
+GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")  # Google "Uygulama Şifresi" (16 hane)
 
 
 def _source_from_url(url: str) -> str:
@@ -71,21 +76,28 @@ def build_email_html(topic: str, results: list[dict]) -> str:
 
 
 def send_report_email(to_email: str, topic: str, results: list[dict]):
-    """Verilen (normalize edilmiş) sonuçlarla rapor e-postasını gönderir."""
+    """Verilen (normalize edilmiş) sonuçlarla rapor e-postasını Gmail SMTP ile gönderir."""
     if not results:
         print(f"'{topic}' için gönderilecek sonuç bulunamadı.")
         return None
 
+    if not GMAIL_USER or not GMAIL_APP_PASSWORD:
+        raise RuntimeError("GMAIL_USER / GMAIL_APP_PASSWORD tanımlı değil. E-posta gönderilemiyor.")
+
     html = build_email_html(topic, results)
 
-    response = resend.Emails.send({
-        "from": "onboarding@resend.dev",
-        "to": to_email,
-        "subject": f"Günlük Raporunuz - {topic}",
-        "html": html,
-    })
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = f"Günlük Raporunuz - {topic}"
+    msg["From"] = formataddr(("Daily Tracker", GMAIL_USER))
+    msg["To"] = to_email
+    msg.attach(MIMEText(html, "html", "utf-8"))
 
-    return response
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
+        server.starttls()
+        server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
+        server.sendmail(GMAIL_USER, [to_email], msg.as_string())
+
+    return {"status": "sent", "to": to_email}
 
 
 def send_daily_report(to_email: str, topic: str, category: str = "General"):

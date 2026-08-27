@@ -30,7 +30,9 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.5-flash-lite
-      - key: RESEND_API_KEY
+      - key: GMAIL_USER          # kendi Gmail adresin (gönderen)
+        sync: false
+      - key: GMAIL_APP_PASSWORD  # Google Uygulama Şifresi (16 hane)
         sync: false
       - key: ALLOWED_ORIGINS       # Vercel frontend adresi, örn. https://daily-tracker.vercel.app
         sync: false
