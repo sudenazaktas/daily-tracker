@@ -132,11 +132,16 @@ export default function SubscriptionCard({ sub, onDelete, onChange }: Props) {
 
       {expanded && preview && (
         <div className="px-md pb-md pt-base border-t border-outline-variant/10 bg-surface-container-low/40">
-          <p className="text-label-md text-on-surface-variant mb-sm flex items-center gap-base">
-            <Icon name="bolt" className="text-[16px] text-primary" />
-            Anlık önizleme — son 24 saatin öne çıkan içerikleri
+          <p className="text-label-md text-on-surface-variant mb-sm flex items-center justify-between gap-base">
+            <span className="flex items-center gap-base">
+              <Icon name="bolt" className="text-[16px] text-primary" />
+              Anlık önizleme — son 24 saatin öne çıkan içerikleri
+            </span>
+            <span className="text-label-sm text-outline">{preview.length} içerik</span>
           </p>
-          <ReportResultList results={preview} />
+          <div className="max-h-96 overflow-y-auto pr-xs">
+            <ReportResultList results={preview} />
+          </div>
         </div>
       )}
     </div>
